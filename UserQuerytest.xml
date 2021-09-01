@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2018.1.1 (Build 643U)" ts="2019-01-31 17:46:39">
+<Routine name="UserQuerytest" type="MAC" languagemode="0" timestamp="59631,42233"><![CDATA[
+userquery()  
+ {
+ Set rset = ##class(%ResultSet).%New()	
+ Set rset.ClassName = "User.TestStoredProc1"
+ Set rset.QueryName = "G"
+ 
+ Read "グローバル名を入力 ",gn,!
+ 
+ Do rset.Execute(gn)
+ 
+ While (rset.Next()) {
+ 	Write rset.Data("Node")," = ",rset.Data("Value"),!
+ }
+ 
+ 
+ }
+]]></Routine>
+</Export>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2018.1.1 (Build 643U)" ts="2019-01-31 17:46:32">
+<Class name="User.TestStoredProc1">
+<ClassType/>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%RegisteredObject</Super>
+<TimeChanged>59570,67975.910729</TimeChanged>
+<TimeCreated>58878,60016</TimeCreated>
+
+<Projection name="JavaProjection1">
+<Type>%Projection.Java</Type>
+</Projection>
+
+<Property name="glvn">
+<Type>%String</Type>
+<Parameter name="TRUNCATE" value="1"/>
+</Property>
+
+<Method name="GClose">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>QHandle:%Binary</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ Set QHandle=""
+ Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GExecute">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&QHandle:%Binary,glvn:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ Set QHandle=$LB("",glvn)
+ Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GFetch">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&QHandle:%Binary,&Row:%List,&AtEnd:%Integer=0]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ Set Row=""
+ ; pull data out of QHandle
+ Set x=$List(QHandle,1)
+ Set glvn=$List(QHandle,2)
+ ; $Order to next node
+ Set x=$O(@glvn@(x))
+ ; update QHandle for next fetch
+ Set QHandle=$LB(x,glvn)
+ ; test for end
+ If x="" Set AtEnd=1 Quit $$$OK
+ ; fill in Row with data for this row
+ Set Row=$LB($na(@glvn@(x)),@glvn@(x))
+ Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="MExecute">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>command:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+ Set %value = ""
+ If $Extract(command,1)="=" {
+   Set command = "Set %value "_command
+ }
+ Xecute command
+ Set value = %value
+ Kill %value
+ Quit value
+]]></Implementation>
+</Method>
+
+<Query name="G">
+<Type>%Query</Type>
+<FormalSpec>glvn:%String</FormalSpec>
+<SqlProc>1</SqlProc>
+<Parameter name="CONTAINID" value="0"/>
+<Parameter name="ROWSPEC" value="Node:%String, Value:%String"/>
+</Query>
+
+<Storage name="Default">
+<Type>%Storage.Persistent</Type>
+<DataLocation>^ooTestStoredProc1D</DataLocation>
+<DefaultData>TestStoredProc1DefaultData</DefaultData>
+<IdLocation>^ooTestStoredProc1D</IdLocation>
+<IndexLocation>^ooTestStoredProc1I</IndexLocation>
+<StreamLocation>^User.TestStoredProc1S</StreamLocation>
+<Data name="TestStoredProc1DefaultData">
+<Value name="1">
+<Value>glvn</Value>
+</Value>
+<Value name="2">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
